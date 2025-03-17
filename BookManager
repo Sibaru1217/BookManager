@@ -1,0 +1,69 @@
+package work;
+
+import java.time.LocalDate;
+import java.util.*;
+
+public class BookManager {
+	private HashMap<String, Book> bookMap = new HashMap<>();
+
+	public boolean addBook(String isbn, String title, int price, String author, LocalDate publishDate) {
+		if (isbn.length() != 10 || bookMap.containsKey(isbn)) {
+			System.out.println("[ERROR] ISBN이 10자리여야 하며, 중복될 수 없습니다.");
+			return false;
+		}
+		if (price < 5000 || price > 50000) {
+			System.out.println("[ERROR] 가격은 5000원 이상 50000원 이하만 가능합니다.");
+			return false;
+		}
+		if (publishDate.isBefore(LocalDate.of(1980, 1, 1)) || publishDate.isAfter(LocalDate.now())) {
+			System.out.println("[ERROR] 출판일은 1980-01-01 이후, 오늘 이전이어야 합니다.");
+			return false;
+		}
+		bookMap.put(isbn, new Book(isbn, title, price, author, publishDate));
+		return true;
+	}
+
+	 public boolean removeBook(String keyword, String type) {
+	        Iterator<Map.Entry<String, Book>> iterator = bookMap.entrySet().iterator();
+	        while (iterator.hasNext()) {
+	            Book book = iterator.next().getValue();
+	            if ((type.equals("ISBN") && book.getIsbn().equals(keyword)) ||
+	                (type.equals("Title") && book.getTitle().toLowerCase().contains(keyword.toLowerCase())) ||
+	                (type.equals("Author") && book.getAuthor().toLowerCase().contains(keyword.toLowerCase()))) {
+	                iterator.remove();
+	                return true;
+	            }
+	        }
+	        System.out.println("[ERROR] 해당 조건에 맞는 도서를 찾을 수 없습니다.");
+	        return false;
+	    }
+
+
+	public List<Book> searchBooks(String keyword, String type) {
+		List<Book> result = new ArrayList<>();
+		for (Book book : bookMap.values()) {
+			if ((type.equals("ISBN") && keyword.length() >= 3 && book.getIsbn().contains(keyword))
+					|| (type.equals("Title") && keyword.length() >= 3
+							&& book.getTitle().toLowerCase().contains(keyword.toLowerCase()))
+					|| (type.equals("Author") && keyword.length() >= 2
+							&& book.getAuthor().toLowerCase().contains(keyword.toLowerCase()))) {
+				result.add(book);
+			}
+		}
+		return result;
+	}
+
+	public List<Book> searchBooksByDateRange(LocalDate start, LocalDate end) {
+		List<Book> result = new ArrayList<>();
+		for (Book book : bookMap.values()) {
+			if (!book.getPublishDate().isBefore(start) && !book.getPublishDate().isAfter(end)) {
+				result.add(book);
+			}
+		}
+		return result;
+	}
+
+	public List<Book> getAllBooks() {
+		return new ArrayList<>(bookMap.values());
+	}
+}

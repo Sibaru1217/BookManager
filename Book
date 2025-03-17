@@ -1,0 +1,47 @@
+package work;
+
+import java.time.LocalDate;
+import java.util.*;
+
+public class Book {
+
+	private String isbn;
+	private String title;
+	private int price;
+	private String author;
+	private LocalDate publishDate;
+
+	public Book(String isbn, String title, int price, String author, LocalDate publishDate) {
+		this.isbn = isbn;
+		this.title = title;
+		this.price = price;
+		this.author = author;
+		this.publishDate = publishDate;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public LocalDate getPublishDate() {
+		return publishDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Book{" + "ISBN='" + isbn + '\'' + ", Title='" + title + '\'' + ", Price=" + price + ", Author='"
+				+ author + '\'' + ", PublishDate=" + publishDate + '}';
+	}
+}

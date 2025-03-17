@@ -1,0 +1,83 @@
+package work;
+
+import java.time.LocalDate;
+import java.util.*;
+
+public class BookManagerEx {
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		BookManager manager = new BookManager();
+		while (true) {
+			System.out.println("\n1. 도서 추가 2. 도서 삭제 3. 도서 검색 4. 출판일 검색 5. 목록 조회 6. 종료");
+			System.out.print("메뉴 선택: ");
+			int choice = scanner.nextInt();
+			scanner.nextLine();
+
+			switch (choice) {
+			case 1:
+				System.out.print("ISBN (10자리): ");
+				String isbn = scanner.nextLine();
+				System.out.print("제목: ");
+				String title = scanner.nextLine();
+				System.out.print("가격: ");
+				int price = scanner.nextInt();
+				scanner.nextLine();
+				System.out.print("저자: ");
+				String author = scanner.nextLine();
+				System.out.print("출판일 (YYYY-MM-DD): ");
+				LocalDate date = LocalDate.parse(scanner.nextLine());
+				if (manager.addBook(isbn, title, price, author, date)) {
+					System.out.println("도서 추가 성공!");
+				}
+				break;
+			case 2:
+                System.out.print("삭제 유형 (ISBN/Title/Author): ");
+                String removeType = scanner.nextLine();
+                System.out.print("삭제할 키워드: ");
+                String removeKeyword = scanner.nextLine();
+                if (manager.removeBook(removeKeyword, removeType)) {
+                    System.out.println("도서 삭제 성공!");
+                }
+				break;
+			case 3:
+				System.out.print("검색 유형 (ISBN/Title/Author): ");
+				String type = scanner.nextLine();
+				System.out.print("검색어: ");
+				String keyword = scanner.nextLine();
+				List<Book> results = manager.searchBooks(keyword, type);
+				if (results.isEmpty()) {
+					System.out.println("[INFO] 검색 결과가 없습니다.");
+				} else {
+					for (Book book : results) {
+						System.out.println(book);
+					}
+				}
+				break;
+			case 4:
+				System.out.print("시작 날짜 (YYYY-MM-DD): ");
+				LocalDate start = LocalDate.parse(scanner.nextLine());
+				System.out.print("끝 날짜 (YYYY-MM-DD): ");
+				LocalDate end = LocalDate.parse(scanner.nextLine());
+				List<Book> dateResults = manager.searchBooksByDateRange(start, end);
+				if (dateResults.isEmpty()) {
+					System.out.println("[INFO] 해당 기간에 출판된 도서가 없습니다.");
+				} else {
+					for (Book book : dateResults) {
+						System.out.println(book);
+					}
+				}
+				break;
+			case 5:
+				System.out.println("전체 도서 목록: " + manager.getAllBooks());
+				break;
+			case 6:
+				System.out.println("프로그램 종료");
+				scanner.close();
+				return;
+			default:
+				System.out.println("[ERROR] 올바른 메뉴를 선택하세요.");
+			}
+		}
+	}
+}
